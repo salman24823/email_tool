@@ -23,6 +23,7 @@ export async function POST(req) {
   }
 
   try {
+
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     console.log("Converted file to buffer");
@@ -36,8 +37,8 @@ export async function POST(req) {
     const parsed = Papa.parse(csvContent, { header: true });
 
     const emails = parsed.data
-      .filter((row) => row.email)
-      .map((row) => row.email.trim());
+      .filter((row) => row.emails)
+      .map((row) => row.emails.trim());
 
     console.log("Parsed emails:", emails);
 
