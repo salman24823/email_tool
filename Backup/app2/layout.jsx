@@ -1,0 +1,22 @@
+// app/layout.js
+import SideBar from "./components/sideBar";
+import "./globals.css";
+
+export const metadata = {
+  title: "Email Campaign Tool",
+  description: "Upload CSV and send bulk emails with interval",
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <head />
+      <body>
+        <div id="Main" className="grid grid-cols-12 min-h-screen">
+          <SideBar />
+          <main className="col-span-10">{children}</main>
+        </div>
+      </body>
+    </html>
+  );
+}
