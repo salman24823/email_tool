@@ -1,4 +1,5 @@
 // app/layout.js
+import { ToastContainer } from "react-toastify";
 import SideBar from "./components/sideBar";
 import "./globals.css";
 
@@ -16,6 +17,7 @@ export default function RootLayout({ children }) {
           <SideBar />
           <main className="col-span-10">{children}</main>
         </div>
+        <ToastContainer />
       </body>
     </html>
   );
