@@ -6,8 +6,8 @@ import { Buffer } from "buffer";
 import sanitizeHtml from "sanitize-html";
 import validator from "validator";
 
-const EMAIL_USER = process.env.EMAIL_USER || "nouman3946@gmail.com";
-const EMAIL_PASS = process.env.EMAIL_PASS || "myyc cvxb kaxk qixn";
+const EMAIL_USER = process.env.EMAIL_USER ;
+const EMAIL_PASS = process.env.EMAIL_PASS;
 const UPLOADS_DIR = path.join(process.cwd(), "uploads");
 const RESULT_DIR = path.join(process.cwd(), "public", "result");
 
@@ -177,9 +177,10 @@ export async function POST(req) {
       const sanitizedBody = sanitizeEmailBody(body);
 
       const transporter = nodemailer.createTransport({
-        service: "gmail",
-        port: 587,
-        secure: false,
+        // service: "gmail",
+        host: "smtp.hostinger.com", // Hostinger's free email SMTP host
+        port: 465,
+        secure: true,
         auth: {
           user: EMAIL_USER,
           pass: EMAIL_PASS,
@@ -196,7 +197,7 @@ export async function POST(req) {
           try {
             for (const email of emails) {
               const mailOptions = {
-                from: `"Campaign" <${EMAIL_USER}>`,
+                from: `"Arafa Webs" <${EMAIL_USER}>`,
                 to: email,
                 subject,
                 html: sanitizedBody,
