@@ -1,6 +1,6 @@
 import { writeFile, unlink, mkdir } from 'fs/promises';
 import path from 'path';
-import { Queue } from 'bullmq';
+import { Queue, QueueEvents } from 'bullmq';
 import Papa from 'papaparse';
 import { Buffer } from 'buffer';
 import sanitizeHtml from 'sanitize-html';
@@ -53,11 +53,10 @@ function isValidEmail(email) {
 
 function sanitizeEmailBody(html) {
   return sanitizeHtml(html, {
-    allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'style']),
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
     allowedAttributes: {
       ...sanitizeHtml.defaults.allowedAttributes,
       img: ['src', 'alt', 'width', 'height'],
-      '*': ['style'],
     },
   });
 }
@@ -78,6 +77,10 @@ const emailQueue = new Queue(QUEUE_NAME, {
       delay: 5000,
     },
   },
+});
+
+const queueEvents = new QueueEvents(QUEUE_NAME, {
+  connection: REDIS_CONFIG,
 });
 
 export async function POST(req) {
@@ -188,7 +191,7 @@ export async function POST(req) {
 
             for (const job of jobs) {
               try {
-                const result = await job.waitUntilFinished(emailQueue.events);
+                const result = await job.waitUntilFinished(queueEvents);
                 sentCount++;
                 controller.enqueue(
                   new TextEncoder().encode(
