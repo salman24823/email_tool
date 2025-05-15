@@ -2,6 +2,7 @@
 import { ToastContainer } from "react-toastify";
 import SideBar from "./components/sideBar";
 import "./globals.css";
+import SessionWrapper from "./components/SessionWrapper/page";
 
 export const metadata = {
   title: "Email Campaign Tool",
@@ -13,11 +14,13 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head />
       <body>
-        <div id="Main" className="grid grid-cols-12 min-h-screen">
-          <SideBar />
-          <main className="col-span-10">{children}</main>
-        </div>
-        <ToastContainer />
+        <SessionWrapper>
+          <div id="Main" className="grid grid-cols-12 min-h-screen">
+            <SideBar />
+            <main className="col-span-10">{children}</main>
+          </div>
+          <ToastContainer />
+        </SessionWrapper>
       </body>
     </html>
   );

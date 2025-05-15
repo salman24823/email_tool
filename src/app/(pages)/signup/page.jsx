@@ -1,10 +1,42 @@
-import React from 'react';
+"use client";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // prevent page reload
+    try {
+      const response = await fetch("/api/handleSignup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast.error(data.error || data.message || "Something went wrong");
+      } else {
+        toast.success("User added successfully!");
+        setName("");
+        setEmail("");
+        setPassword("");
+      }
+    } catch (error) {
+      toast.error("Failed to Submit Credentials");
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
-        <form>
+        <form onSubmit={handleSubmit}>
           <p className="text-center text-black text-xl font-semibold mb-6">
             Create a new account
           </p>
@@ -13,7 +45,10 @@ const SignUp = () => {
             <input
               type="text"
               placeholder="Full name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               className="w-full px-4 py-4 text-sm rounded-lg border border-gray-300 shadow-sm outline-none"
+              required
             />
           </div>
 
@@ -21,7 +56,10 @@ const SignUp = () => {
             <input
               type="email"
               placeholder="Enter email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-4 text-sm rounded-lg border border-gray-300 shadow-sm outline-none"
+              required
             />
           </div>
 
@@ -29,7 +67,10 @@ const SignUp = () => {
             <input
               type="password"
               placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-4 text-sm rounded-lg border border-gray-300 shadow-sm outline-none"
+              required
             />
           </div>
 
@@ -41,7 +82,7 @@ const SignUp = () => {
           </button>
 
           <p className="text-center text-gray-500 text-sm mt-4">
-            Already have an account?{' '}
+            Already have an account?{" "}
             <a href="/signin" className="underline">
               Sign in
             </a>
