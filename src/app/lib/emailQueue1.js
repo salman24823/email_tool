@@ -11,7 +11,7 @@ const REDIS_CONFIG = {
   host: process.env.REDIS_HOST || 'localhost',
   port: parseInt(process.env.REDIS_PORT) || 6379,
 };
-const QUEUE_NAME = 'emailQueue';
+const QUEUE_NAME = 'emailQueue1';
 const timeZone = 'Asia/Karachi';
 
 const formatter = new Intl.DateTimeFormat('en-PK', {
