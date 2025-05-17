@@ -3,24 +3,16 @@ import mongoose from "mongoose";
 const loginSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "Name is required"],
-    trim: true,
-    minlength: 2,
-    maxlength: 50,
+    required: true,
   },
   email: {
     type: String,
-    required: [true, "Email is required"],
+    required: true,
     unique: true,
-    lowercase: true,
-    trim: true,
-    match: [/\S+@\S+\.\S+/, "Please use a valid email address"],
   },
   password: {
     type: String,
-    required: [true, "Password is required"],
-    minlength: 6,
-    select: false,
+    required: true,
   },
   createdAt: {
     type: Date,

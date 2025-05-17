@@ -1,8 +1,8 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import dbConnection from "@/config/dbConnection";
-import userModel from "@/Models/userModel";
+import dbConnection from "@/config/db";
+import loginModel from "@/model/SignUp";
 
 export const authOptions = NextAuth({
   providers: [
@@ -11,11 +11,11 @@ export const authOptions = NextAuth({
       credentials: {},
       async authorize(credentials) {
         
-        const { email, password, role } = credentials;
+        const { email, password } = credentials;
 
-        console.log(email, password, role, "data");
+        console.log(email, password, "data");
 
-        if (!email || !password || !role) {
+        if (!email || !password ) {
           throw new Error("All fields are required");
         }
 
@@ -24,18 +24,15 @@ export const authOptions = NextAuth({
 
           let user;
 
-          user = await userModel.findOne({ email });
+          user = await loginModel.findOne({ email });
 
           if (!user || !user.password) {
-            throw new Error("Invalid email or password");
+            console.log(user,"UsER" , user.password,"user.password");
+            throw new Error("fields are required");
           }
 
           const isMatch = await bcrypt.compare(password, user.password);
           if (!isMatch) {
-            throw new Error("Invalid email or password");
-          }
-
-          if (role !== user.role) {
             throw new Error("Invalid email or password");
           }
 

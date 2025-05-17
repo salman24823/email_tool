@@ -1,14 +1,16 @@
 "use client";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // prevent page reload
+    e.preventDefault();
     try {
       const response = await fetch("/api/handleSignup", {
         method: "POST",
@@ -27,6 +29,11 @@ const SignUp = () => {
         setName("");
         setEmail("");
         setPassword("");
+
+        // Navigate to signin
+        setTimeout(() => {
+          router.push("/signin");
+        }, 1500);
       }
     } catch (error) {
       toast.error("Failed to Submit Credentials");
