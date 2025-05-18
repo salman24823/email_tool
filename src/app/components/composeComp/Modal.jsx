@@ -7,15 +7,25 @@ import {
   ModalFooter,
   Button,
 } from "@heroui/react";
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle } from "lucide-react";
 
-export default function ModalComponent({ isOpen, onOpenChange, logMessages, sentCount, totalEmails, isSending, onClose }) {
+export default function ModalComponent({
+  isOpen,
+  onOpenChange,
+  logMessages,
+  sentCount,
+  totalEmails,
+  isSending,
+  onClose,
+}) {
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-2xl">
       <ModalContent>
         {() => (
           <>
-            <ModalHeader className="flex flex-col gap-1">Campaign Progress</ModalHeader>
+            <ModalHeader className="flex flex-col gap-1">
+              Campaign Progress
+            </ModalHeader>
             <ModalBody>
               <div className="space-y-2 max-h-96 overflow-y-auto">
                 {logMessages.length === 0 && (
@@ -25,13 +35,20 @@ export default function ModalComponent({ isOpen, onOpenChange, logMessages, sent
                   <p
                     key={index}
                     className={`text-sm ${
-                      log.type === 'success' ? 'text-green-600' :
-                      log.type === 'error' ? 'text-red-600' :
-                      'text-blue-600'
+                      log.type === "success"
+                        ? "text-green-600"
+                        : log.type === "error"
+                        ? "text-red-600"
+                        : "text-blue-600"
                     }`}
                   >
-                    {log.type === 'error' && <AlertCircle className="inline w-4 h-4 mr-1" />}
-                    {log.message} <span className="text-xs text-slate-500">[{new Date(log.timestamp).toLocaleTimeString()}]</span>
+                    {log.type === "error" && (
+                      <AlertCircle className="inline w-4 h-4 mr-1" />
+                    )}
+                    {log.message}{" "}
+                    <span className="text-xs text-slate-500">
+                      [{new Date(log.timestamp).toLocaleTimeString()}]
+                    </span>
                   </p>
                 ))}
               </div>

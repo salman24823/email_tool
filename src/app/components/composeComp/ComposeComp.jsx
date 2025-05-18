@@ -1,20 +1,17 @@
 "use client";
+
 import { useRef, useState } from "react";
 import LivePreview from "./LivePreview";
+import ModalComponent from "./Modal";
 import {
   Button,
   Card,
   Input,
   Textarea,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   useDisclosure,
 } from "@heroui/react";
-import { Paperclip, Upload, AlertCircle } from "lucide-react";
-// import { toast } from "react-toastify";
+import { Paperclip, Upload } from "lucide-react";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const ComposeComp = ({
@@ -33,9 +30,10 @@ const ComposeComp = ({
   const [sentCount, setSentCount] = useState(0);
   const [isSending, setIsSending] = useState(false);
   const [totalEmails, setTotalEmails] = useState(0);
+  const [campaignName, setCampaignName] = useState("");
 
   const handleSubmit = async () => {
-    if (!csvFile || !subject || !htmlBody || !interval) {
+    if (!csvFile || !subject || !campaignName || !htmlBody || !interval) {
       toast.error("Please fill all required fields", {
         position: "top-right",
         autoClose: 5000,
@@ -47,11 +45,12 @@ const ComposeComp = ({
     setLogMessages([]);
     setSentCount(0);
     setTotalEmails(0);
-    onOpen(); // Open modal when campaign starts
+    onOpen();
 
     const formData = new FormData();
     formData.append("file", csvFile);
     formData.append("subject", subject);
+    formData.append("campaignName", campaignName);
     formData.append("body", htmlBody);
     formData.append("interval", interval);
 
@@ -81,7 +80,7 @@ const ComposeComp = ({
             const data = JSON.parse(line);
             if (data.type === "sent") {
               setLogMessages((prev) => [
-                ...prev.slice(-100), // Keep only the last 100 messages
+                ...prev.slice(-100),
                 {
                   type: "success",
                   message: `Email ${data.sentCount} to ${data.email} sent successfully`,
@@ -94,9 +93,7 @@ const ComposeComp = ({
                 ...prev.slice(-100),
                 {
                   type: "error",
-                  message: `Failed to send email ${sentCount + 1} to ${
-                    data.email
-                  }: ${data.error}`,
+                  message: `Failed to send email ${sentCount + 1} to ${data.email}: ${data.error}`,
                   timestamp: data.timestamp,
                 },
               ]);
@@ -112,7 +109,7 @@ const ComposeComp = ({
               setTotalEmails(data.sent + data.failed);
               if (data.sent > 0) {
                 toast.success(
-                  `${data.sent} emails sent successfully! Check /public/result/mailsent.csv for logs.`,
+                  `${data.sent} emails sent successfully! Check MongoDB for campaign logs.`,
                   {
                     position: "top-right",
                     autoClose: 5000,
@@ -121,7 +118,7 @@ const ComposeComp = ({
               }
               if (data.failed > 0) {
                 toast.warn(
-                  `${data.failed} emails failed to send. Check logs for details.`,
+                  `${data.failed} emails failed to send. Check MongoDB logs for details.`,
                   {
                     position: "top-right",
                     autoClose: 5000,
@@ -155,14 +152,13 @@ const ComposeComp = ({
 
   return (
     <div className="space-y-5">
-      {/* Campaign Summary Card */}
       {isSending || sentCount > 0 ? (
         <Card className="mt-6 border-slate-200">
           <div className="p-6">
             <h3 className="text-lg font-medium mb-4">Campaign Status</h3>
             <p className="text-sm font-medium text-slate-700">
-              Emails Sent: {sentCount}{" "}
-              {totalEmails > 0 ? `/ ${totalEmails}` : ""}
+              Emails Sent: {sentCount}
+              {totalEmails > 0 ? ` / ${totalEmails}` : ""}
             </p>
             {totalEmails > 0 && (
               <div className="mt-4">
@@ -172,7 +168,9 @@ const ComposeComp = ({
                 <div className="w-full bg-slate-200 rounded-full h-2.5 mt-2">
                   <div
                     className="bg-blue-600 h-2.5 rounded-full"
-                    style={{ width: `${(sentCount / totalEmails) * 100}%` }}
+                    style={{
+                      width: `${(sentCount / totalEmails) * 100}%`,
+                    }}
                   ></div>
                 </div>
               </div>
@@ -219,6 +217,18 @@ const ComposeComp = ({
             </div>
 
             <div className="border-t border-slate-200 my-6"></div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-slate-700">
+                Campaign Name
+              </label>
+              <Input
+                type="text"
+                value={campaignName}
+                onChange={(e) => setCampaignName(e.target.value)}
+                placeholder="Enter campaign name"
+              />
+            </div>
 
             <div className="space-y-2">
               <label className="block text-sm font-medium text-slate-700">
@@ -281,71 +291,15 @@ const ComposeComp = ({
         <LivePreview htmlBody={htmlBody} />
       </div>
 
-      {/* Modal for Campaign Log */}
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-2xl">
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                Campaign Progress
-              </ModalHeader>
-              <ModalBody>
-                <div className="space-y-2 max-h-96 overflow-y-auto">
-                  {logMessages.length === 0 && (
-                    <p className="text-sm text-slate-500">
-                      Starting campaign...
-                    </p>
-                  )}
-                  {logMessages.map((log, index) => (
-                    <p
-                      key={index}
-                      className={`text-sm ${
-                        log.type === "success"
-                          ? "text-green-600"
-                          : log.type === "error"
-                          ? "text-red-600"
-                          : "text-blue-600"
-                      }`}
-                    >
-                      {log.type === "error" && (
-                        <AlertCircle className="inline w-4 h-4 mr-1" />
-                      )}
-                      {log.message}{" "}
-                      <span className="text-xs text-slate-500">
-                        [{new Date(log.timestamp).toLocaleTimeString()}]
-                      </span>
-                    </p>
-                  ))}
-                </div>
-                {sentCount > 0 && totalEmails > 0 && (
-                  <div className="mt-4">
-                    <p className="text-sm font-medium text-slate-700">
-                      Progress: {sentCount}/{totalEmails} emails sent (
-                      {((sentCount / totalEmails) * 100).toFixed(1)}%)
-                    </p>
-                    <div className="w-full bg-slate-200 rounded-full h-2.5 mt-2">
-                      <div
-                        className="bg-blue-600 h-2.5 rounded-full"
-                        style={{ width: `${(sentCount / totalEmails) * 100}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                )}
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  color="danger"
-                  variant="light"
-                  onPress={onClose}
-                  disabled={isSending}
-                >
-                  Close
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      <ModalComponent
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        logMessages={logMessages}
+        sentCount={sentCount}
+        totalEmails={totalEmails}
+        isSending={isSending}
+        onClose={onOpenChange}
+      />
     </div>
   );
 };
