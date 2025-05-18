@@ -15,9 +15,8 @@ export default function RootLayout({ children }) {
       <head />
       <body>
         <SessionWrapper>
-          <div id="Main" className="grid grid-cols-12 min-h-screen">
-            <SideBar />
-            <main className="col-span-10">{children}</main>
+          <div id="Main" className="">
+            <main >{children}</main>
           </div>
           <ToastContainer />
         </SessionWrapper>
