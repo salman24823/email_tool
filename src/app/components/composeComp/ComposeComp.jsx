@@ -278,9 +278,8 @@ const ComposeComp = ({
             <Button
               onPress={handleSubmit}
               disabled={isSending}
-              className={`w-full py-6 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-700 hover:to-blue-700 text-white font-medium rounded-lg transition-all ${
-                isSending ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`w-full py-6 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-700 hover:to-blue-700 text-white font-medium rounded-lg transition-all ${isSending ? "opacity-50 cursor-not-allowed" : ""
+                }`}
             >
               <Upload className="mr-2 h-4 w-4" />
               {isSending ? "Sending Campaign..." : "Upload & Start Campaign"}
