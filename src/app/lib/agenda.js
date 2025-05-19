@@ -113,7 +113,7 @@ agenda.define("send-email-campaign", async (job) => {
     // Process emails
     for (const email of emails) {
       const mailOptions = {
-        from: `"Campaign" <${process.env.EMAIL_USER}>`,
+        from: `"Arafa Webs Team" <${process.env.EMAIL_USER}>`,
         to: email,
         subject,
         html: body,
