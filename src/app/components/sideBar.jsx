@@ -3,6 +3,7 @@ import {
   ChevronDown,
   Home,
   Mail,
+  Search,
   Send,
   Settings,
 } from "lucide-react";
@@ -43,6 +44,13 @@ const SideBar = () => {
         >
           <BarChart className="w-4 h-4" />
           Analytics
+        </a>
+        <a
+          href="/compose/tracking"
+          className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 text-slate-700 transition-colors"
+        >
+          <Search className="w-4 h-4" />
+          Tracking
         </a>
         <a
           href="#"

@@ -27,4 +27,5 @@ const campaignResultSchema = new mongoose.Schema({
 });
 
 // Export the model, reusing it if already defined
-export default mongoose.models.CampaignResult || mongoose.model("CampaignResult", campaignResultSchema);
+export default mongoose.models.CampaignResult ||
+  mongoose.model("CampaignResult", campaignResultSchema);
