@@ -89,7 +89,7 @@ const Tracking = () => {
               </h2>
               <Table aria-label="Email Tracking Table">
                 <TableHeader>
-                  <TableColumn>ID</TableColumn>
+                  <TableColumn>#</TableColumn>
                   <TableColumn>Email</TableColumn>
                   <TableColumn>Is Sent</TableColumn>
                   <TableColumn>Timestamp</TableColumn>
