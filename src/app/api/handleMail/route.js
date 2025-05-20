@@ -8,7 +8,7 @@ import dbConnection from "@/config/db";
 import { agenda } from "@/app/lib/agenda";
 import { startAgenda } from "@/app/lib/agenda";
 
-export default revalidate = 0
+export const revalidate = 0
 
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASS = process.env.EMAIL_PASS;
