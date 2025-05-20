@@ -89,6 +89,7 @@ const Tracking = () => {
               </h2>
               <Table aria-label="Email Tracking Table">
                 <TableHeader>
+                  <TableColumn>ID</TableColumn>
                   <TableColumn>Email</TableColumn>
                   <TableColumn>Is Sent</TableColumn>
                   <TableColumn>Timestamp</TableColumn>
@@ -96,6 +97,7 @@ const Tracking = () => {
                 <TableBody>
                   {paginatedEmails.map((emailObj, index) => (
                     <TableRow key={index}>
+                      <TableCell>{startIndex + index + 1}</TableCell>
                       <TableCell>{emailObj.email}</TableCell>
                       <TableCell>
                         {emailObj.isSent ? "✅ Yes" : "❌ No"}
