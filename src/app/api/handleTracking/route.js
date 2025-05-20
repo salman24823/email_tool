@@ -3,6 +3,8 @@
 import dbConnection from "@/config/db";
 import campaignResult from "@/model/campaignResult";
 
+export default revalidate = 0
+
 export async function GET() {
   try {
     await dbConnection();
